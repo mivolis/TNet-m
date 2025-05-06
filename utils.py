@@ -183,8 +183,8 @@ def load_data(args):
         z1, z2 = 0.7, 0.2
         def discretize(G):
             G = np.zeros_like(G)
-            G[G >= z1] = z1
-            G[(G >= z2) & (G < z1)] = z2
+            G[G >= z1] = 2
+            G[(G >= z2) & (G < z1)] = 1
             return G
         trainG = discretize(trainG)
         valG   = discretize(valG)
