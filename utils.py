@@ -186,11 +186,15 @@ def load_data(args):
             G[G >= z1] = 0.7
             G[(G >= z2) & (G < z1)] = 0.2
             return G
+        
+	print("Befor splitting, the train G is: ", trainG)
         trainG = discretize(trainG)
+	print("After discretize(trainG), G becomes: ", trainG)
         valG   = discretize(valG)
         testG  = discretize(testG)
 
         (train_t1z1, train_t1z0, train_t0z0, train_t0z1, train_t0z2) = split_tz(trainT, trainG)
+	print("After splitting(trainG), G becomes: ", trainG)
         (val_t1z1,   val_t1z0,   val_t0z0,   val_t0z1,   val_t0z2  ) = split_tz(valT,   valG)
         (test_t1z1,  test_t1z0,  test_t0z0,  test_t0z1,  test_t0z2 ) = split_tz(testT,  testG)
 
@@ -257,11 +261,14 @@ def load_data_no_flip(args):
             G[G >= z1] = z1
             G[(G >= z2) & (G < z1)] = z2
             return G
+        print("Before discretize: ", trainG)
         trainG = discretize(trainG)
+        print("After discretize: ", trainG)
         valG   = discretize(valG)
         testG  = discretize(testG)
 
         (train_t1z1, train_t1z0, train_t0z0, train_t0z1, train_t0z2) = split_tz(trainT, trainG)
+        print("After splitting: ", trainG)
         (val_t1z1,   val_t1z0,   val_t0z0,   val_t0z1,   val_t0z2  ) = split_tz(valT,   valG)
         (test_t1z1,  test_t1z0,  test_t0z0,  test_t0z1,  test_t0z2 ) = split_tz(testT,  testG)
 
@@ -458,7 +465,3 @@ def pearsonr(x, y):
     r_den = torch.norm(xm, 2) * torch.norm(ym, 2)
     r_val = r_num / r_den
     return r_val**2
-
-
-
-
