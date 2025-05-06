@@ -14,7 +14,8 @@ in https://github.com/songjiang0909/Causal-Inference-on-Networked-Data
 Our code is based on https://github.com/songjiang0909/Causal-Inference-on-Networked-Data
 Thank them for their code!
 '''
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Using device:", device)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--cuda', type=int, default=7, help='Use CUDA training.')
