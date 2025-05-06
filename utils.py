@@ -186,8 +186,6 @@ def load_data(args):
             G[G >= z1] = 0.7
             G[(G >= z2) & (G < z1)] = 0.2
             return G
-
-	print("Befor splitting, the train G is: ", trainG)
         trainG = discretize(trainG)
 	print("After discretize(trainG), G becomes: ", trainG)
         valG   = discretize(valG)
