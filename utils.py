@@ -145,11 +145,11 @@ def split_tz(T, G):
         else:
             G = np.array(G)
         return (
-            np.where((T == 1) & (G == 1))[0],
+            np.where((T == 1) & abs(G-0.2)<0.001))[0],
             np.where((T == 1) & (G == 0))[0],
             np.where((T == 0) & (G == 0))[0],
-            np.where((T == 0) & (G == 1))[0],
-            np.where((T == 0) & (G == 2))[0],
+            np.where((T == 0) & abs(G-0.2)<0.001))[0],
+            np.where((T == 0) & abs(G-0.7)<0.001))[0],
         )
 
 def load_data(args):
@@ -183,8 +183,8 @@ def load_data(args):
         z1, z2 = 0.7, 0.2
         def discretize(G):
             G = np.zeros_like(G)
-            G[G >= z1] = 2
-            G[(G >= z2) & (G < z1)] = 1
+            G[G >= z1] = 0.7
+            G[(G >= z2) & (G < z1)] = 0.2
             return G
         trainG = discretize(trainG)
         valG   = discretize(valG)
