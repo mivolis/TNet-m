@@ -145,11 +145,11 @@ def split_tz(T, G):
         else:
             G = np.array(G)
         return (
-            np.where((T == 1) & abs(G-0.2)<0.001))[0],
+            np.where((T == 1) & (abs(G-0.2)<0.001))[0],
             np.where((T == 1) & (G == 0))[0],
             np.where((T == 0) & (G == 0))[0],
-            np.where((T == 0) & abs(G-0.2)<0.001))[0],
-            np.where((T == 0) & abs(G-0.7)<0.001))[0],
+            np.where((T == 0) & (abs(G-0.2)<0.001))[0],
+            np.where((T == 0) & (abs(G-0.7)<0.001))[0],
         )
 
 def load_data(args):
