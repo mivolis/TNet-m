@@ -93,12 +93,11 @@ def generate_simulation_data(num, p):
     # generate adjacency matrix A
     A = nx.erdos_renyi_graph(num, p=p)
     A = nx.to_numpy_array(A)
-    A += np.eye(num)
 
     degree = A.sum(axis=1)
     X_neighbor = np.zeros(X.shape)
     for i in range(num):
-        neighbors = np.where(A_matrix[i] == 1)[0]
+        neighbors = np.where(A[i] == 1)[0]
         if len(neighbors) > 0:
             X_neighbor[i] = np.mean(X[neighbors], axis=0)
 
@@ -113,19 +112,19 @@ def generate_simulation_data(num, p):
         p = expit(logit_p)
         Z[i] = np.random.binomial(1, p)
 
-    A_matrix += np.eye(num)
+    A += np.eye(num)
     
     # 对称归一化邻接矩阵： A_hat = D^{-1/2} A D^{-1/2}
-    D = np.diag(np.sum(A_matrix, axis=1))
+    D = np.diag(np.sum(A, axis=1))
     D_inv_sqrt = np.linalg.inv(np.sqrt(D))
-    A_hat = D_inv_sqrt @ A_matrix @ D_inv_sqrt  # shape: [num, num]
+    A_hat = D_inv_sqrt @ A @ D_inv_sqrt  # shape: [num, num]
 
     w2 = np.random.randn(2)  # 用于 po = sigmoid(w2^T x_i)
     po = expit(X @ w2)       # [num]
 
     poN = np.zeros(num)
     for i in range(num):
-        neighbors = np.where(A_matrix[i] > 0)[0]
+        neighbors = np.where(A[i] > 0)[0]
         if len(neighbors) > 0:
             poN[i] = np.mean(po[neighbors])
 
