@@ -129,6 +129,12 @@ def generate_simulation_data(num, p):
 
     eps = np.random.normal(0, 1, size=num)
 
+    G = np.zeros(num)
+    for i in range(num):
+        neighbor = np.where(A[i] > 0)[0]
+        if len(neighbor):
+            G[i] = Z[neighbor].mean()
+
     Y = np.sin(Z*2*pi + Z*G*2*pi) + np.sin(po*2*pi + 0.5 * poN*2*pi) + np.cos(G*2*pi +0.5*G**2*2*pi + 0.2 * G**3*2*pi) + eps # 9
         # Y = np.sin(Z*2*pi + Z*G*2*pi + po*2*pi + 0.5 * poN*2*pi) + np.cos(G*2*pi +0.5*G**2*2*pi + 0.2 * G**3*2*pi) + eps # 10
         # Y = np.sin(Z*2*pi + Z*G*2*pi + po*2*pi + 0.5 * poN*2*pi) + np.cos(G*2*pi +0.5*G**2*2*pi + 0.2 * G**3*2*pi + po*2*pi + 0.5 * poN*2*pi) + eps # 11
