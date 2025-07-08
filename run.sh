@@ -41,3 +41,9 @@ if [ $1 -eq 7 ]; then
         CUDA_VISIBLE_DEVICES=1 python main.py --model=TargetedModel_DoubleBSpline --dataset=Simulation --n_nodes=3000 --edge_prob=0.2 --expID=$id --flipRate=1 --lr_1step=0.001 --lr_2step=0.001 --num_grid=20 --beta=20 --epochs=160 --tr_knots=0.2 --alpha=1. --gamma=1.0
     done
 fi
+
+if [ $1 -eq 8 ]; then
+    for id in {0,1,2,3,4} ; do
+        CUDA_VISIBLE_DEVICES=1 python main.py --model=TargetedModel_DoubleBSpline --dataset=mykd --n_nodes=3000 --edge_prob=0.2 --expID=$id --flipRate=1 --lr_1step=0.001 --lr_2step=0.001 --num_grid=20 --beta=20 --epochs=160 --tr_knots=0.2 --alpha=1. --gamma=1.0
+    done
+fi
