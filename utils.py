@@ -117,7 +117,7 @@ def generate_simulation_data(num, p):
     D_inv_sqrt = np.linalg.inv(np.sqrt(D))
     A_hat = D_inv_sqrt @ A_matrix @ D_inv_sqrt  # shape: [num, num]
 
-    w2 = np.random.randn(k)  # 用于 po = sigmoid(w2^T x_i)
+    w2 = np.random.randn(2)  # 用于 po = sigmoid(w2^T x_i)
     po = expit(X @ w2)       # [num]
 
     poN = np.zeros(num)
