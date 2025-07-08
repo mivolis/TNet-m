@@ -9,76 +9,134 @@ from sklearn.preprocessing import StandardScaler
 import torch
 import torch.nn.functional as F
 
+# def generate_simulation_data(num, p):
+#     np.random.seed(0)
+#     # generate feature Z
+#     x1 = np.random.normal(0, 1, size=num)
+#     x2 = np.random.normal(0, 1, size=num)
+#     X = np.column_stack((x1, x2))
+
+#     # generate adjacency matrix A
+#     A = nx.erdos_renyi_graph(num, p=p)
+#     A = nx.to_numpy_array(A)
+#     A += np.eye(num)
+
+#     degree = A.sum(axis=1)
+#     # remove x_neighbor as Z provides information about treatment of neighbors
+
+#     # generate treatment assignment Z
+#     # modify
+#     coef_1, coef_2, coef_degree = 4, 3, 4
+#     intercept = -(num * p * coef_degree + coef_1 * 0.5 + coef_2 * 9)
+
+#     Z = np.zeros(num)
+#     while len(np.unique(Z)) < 2:
+#         for i in range(num):
+#             logit_p = (intercept + coef_1 * x1[i] + coef_2 * x2[i] + coef_degree * degree[i])
+#             p = 1 / (1 + np.exp(-logit_p))
+#             Z[i] = np.random.binomial(1, p)
+
+#     # generate treatment summary function of neighbors G
+#     G = np.zeros(num)
+#     for i in range(num):
+#         neighbor = np.where(A[i] > 0)[0]
+#         if len(neighbor):
+#             G[i] = Z[neighbor].mean()
+    
+#     # generate potential outcome Y
+#     # generate nonlinear potential outcome of individuals
+#     # W0 = np.random.randn(2, 16)  # 2 input features → 4 hidden units
+#     # W1 = np.random.randn(16, 1)  # 4 hidden units → 1 output
+#     w2 = np.random.randn(2)
+#     po = 1 / (1 + np.exp(-X @ w2))
+
+#     # generate potential outcome influence of neighbors
+#     poN = np.zeros(num)
+#     for i in range(num):
+#         neighbor = np.where(A[i] > 0)[0]
+#         if len(neighbor):
+#             poN[i] = po[neighbor].mean()
+
+#     # generate noise
+#     eps = np.random.normal(0, 1, size=num)
+
+#     # modify
+#     Y = Z + G + po + 0.5 * poN + eps
+    
+#     # Standardize
+#     scaler_Y = StandardScaler()
+#     # Y_mean = scaler_Y.mean_[0]
+#     # Y_std = scaler_Y.scale_[0]
+#     Y = scaler_Y.fit_transform(Y.reshape(-1, 1)).flatten()
+
+#     X = np.column_stack((Z, X))  # Add treatment as a feature
+    
+#     # D = np.diag(np.sum(A, axis=1))
+#     # D_inv_sqrt = np.linalg.inv(np.sqrt(D))
+#     # A_hat = D_inv_sqrt @ A @ D_inv_sqrt
+#     # H1 = np.maximum(0, A_hat @ X @ W0)  # ReLU
+#     # H2 = A_hat @ H1 @ W1                # Final output 
+
+#     return A, X, Z, Y, G, scaler_Y.mean_[0], scaler_Y.scale_[0]
+	
 def generate_simulation_data(num, p):
-    np.random.seed(0)
-    # generate feature Z
+    # x1 = np.random.choice([0, 1], size=num)
+    # x2 = np.random.choice([6, 7, 8, 9, 10, 11, 12], size=num)
+    # X = np.column_stack((x1, x2))
     x1 = np.random.normal(0, 1, size=num)
     x2 = np.random.normal(0, 1, size=num)
+    # X_rest = np.random.normal(0, 1, (num, k - 2))
+    # X = np.column_stack((x1, x2, X_rest))
     X = np.column_stack((x1, x2))
 
-    # generate adjacency matrix A
     A = nx.erdos_renyi_graph(num, p=p)
-    A = nx.to_numpy_array(A)
-    A += np.eye(num)
+    A_matrix = nx.to_numpy_array(A)
 
-    degree = A.sum(axis=1)
-    # remove x_neighbor as Z provides information about treatment of neighbors
+    degree = A_matrix.sum(axis=1)
+    X_neighbor = np.zeros(X.shape)
+    for i in range(num):
+        neighbors = np.where(A_matrix[i] == 1)[0]
+        if len(neighbors) > 0:
+            X_neighbor[i] = np.mean(X[neighbors], axis=0)
 
-    # generate treatment assignment Z
-    # modify
-    coef_1, coef_2, coef_degree = 4, 3, 4
-    intercept = -(num * p * coef_degree + coef_1 * 0.5 + coef_2 * 9)
+    coef_2 = 3
+    coef_1 = 4
+    coef_degree = 4
+    intercept = -(num * p * coef_degree + coef_2 * 0.5 + coef_1 * 0.5)
 
     Z = np.zeros(num)
-    while len(np.unique(Z)) < 2:
-        for i in range(num):
-            logit_p = (intercept + coef_1 * x1[i] + coef_2 * x2[i] + coef_degree * degree[i])
-            p = 1 / (1 + np.exp(-logit_p))
-            Z[i] = np.random.binomial(1, p)
-
-    # generate treatment summary function of neighbors G
-    G = np.zeros(num)
     for i in range(num):
-        neighbor = np.where(A[i] > 0)[0]
-        if len(neighbor):
-            G[i] = Z[neighbor].mean()
-    
-    # generate potential outcome Y
-    # generate nonlinear potential outcome of individuals
-    # W0 = np.random.randn(2, 16)  # 2 input features → 4 hidden units
-    # W1 = np.random.randn(16, 1)  # 4 hidden units → 1 output
-    w2 = np.random.randn(2)
-    po = 1 / (1 + np.exp(-X @ w2))
+        logit_p = (intercept + coef_2 * x2[i] + coef_1 * x1[i] + coef_degree * degree[i])
+        p = expit(logit_p)
+        Z[i] = np.random.binomial(1, p)
 
-    # generate potential outcome influence of neighbors
+    A_matrix += np.eye(num)
+    
+    # 对称归一化邻接矩阵： A_hat = D^{-1/2} A D^{-1/2}
+    D = np.diag(np.sum(A_matrix, axis=1))
+    D_inv_sqrt = np.linalg.inv(np.sqrt(D))
+    A_hat = D_inv_sqrt @ A_matrix @ D_inv_sqrt  # shape: [num, num]
+
+    def generate_Y(X, X_neighbor, Z, G, k):
+    w2 = np.random.randn(k)  # 用于 po = sigmoid(w2^T x_i)
+    po = expit(X @ w2)       # [num]
+
     poN = np.zeros(num)
     for i in range(num):
-        neighbor = np.where(A[i] > 0)[0]
-        if len(neighbor):
-            poN[i] = po[neighbor].mean()
+        neighbors = np.where(A_matrix[i] > 0)[0]
+        if len(neighbors) > 0:
+            poN[i] = np.mean(po[neighbors])
 
-    # generate noise
     eps = np.random.normal(0, 1, size=num)
 
-    # modify
-    Y = Z + G + po + 0.5 * poN + eps
-    
-    # Standardize
+    Y = np.sin(Z*2*pi + Z*G*2*pi) + np.sin(po*2*pi + 0.5 * poN*2*pi) + np.cos(G*2*pi +0.5*G**2*2*pi + 0.2 * G**3*2*pi) + eps # 9
+        # Y = np.sin(Z*2*pi + Z*G*2*pi + po*2*pi + 0.5 * poN*2*pi) + np.cos(G*2*pi +0.5*G**2*2*pi + 0.2 * G**3*2*pi) + eps # 10
+        # Y = np.sin(Z*2*pi + Z*G*2*pi + po*2*pi + 0.5 * poN*2*pi) + np.cos(G*2*pi +0.5*G**2*2*pi + 0.2 * G**3*2*pi + po*2*pi + 0.5 * poN*2*pi) + eps # 11
     scaler_Y = StandardScaler()
-    # Y_mean = scaler_Y.mean_[0]
-    # Y_std = scaler_Y.scale_[0]
     Y = scaler_Y.fit_transform(Y.reshape(-1, 1)).flatten()
-
     X = np.column_stack((Z, X))  # Add treatment as a feature
     
-    # D = np.diag(np.sum(A, axis=1))
-    # D_inv_sqrt = np.linalg.inv(np.sqrt(D))
-    # A_hat = D_inv_sqrt @ A @ D_inv_sqrt
-    # H1 = np.maximum(0, A_hat @ X @ W0)  # ReLU
-    # H2 = A_hat @ H1 @ W1                # Final output 
-
     return A, X, Z, Y, G, scaler_Y.mean_[0], scaler_Y.scale_[0]
-
 
 def sparse_mx_to_torch_sparse_tensor(sparse_mx,cuda=False):
     """Convert a scipy sparse matrix to a torch sparse tensor."""
