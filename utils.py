@@ -89,11 +89,13 @@ def generate_simulation_data(num, p):
     # X_rest = np.random.normal(0, 1, (num, k - 2))
     # X = np.column_stack((x1, x2, X_rest))
     X = np.column_stack((x1, x2))
-
+	
+    # generate adjacency matrix A
     A = nx.erdos_renyi_graph(num, p=p)
-    A_matrix = nx.to_numpy_array(A)
+    A = nx.to_numpy_array(A)
+    A += np.eye(num)
 
-    degree = A_matrix.sum(axis=1)
+    degree = A.sum(axis=1)
     X_neighbor = np.zeros(X.shape)
     for i in range(num):
         neighbors = np.where(A_matrix[i] == 1)[0]
