@@ -260,32 +260,32 @@ def load_data(args):
         (test_t1z1,  test_t1z0,  test_t0z0,  test_t0z1,  test_t0z2 ) = split_tz(testT,  testG)
 
 
-    # with open(file,"rb") as f:
-    #     data = pkl.load(f)
-    # dataTrain,dataVal,dataTest = data["train"],data["val"],data["test"]
+    with open(file,"rb") as f:
+        data = pkl.load(f)
+    dataTrain,dataVal,dataTest = data["train"],data["val"],data["test"]
 
-    # Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
+    Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 
-    # trainA, trainX, trainT,cfTrainT,POTrain,cfPOTrain = dataTransform(dataTrain,cuda)
-    # valA, valX, valT,cfValT,POVal,cfPOVal = dataTransform(dataVal,cuda)
-    # testA, testX, testT,cfTestT,POTest,cfPOTest = dataTransform(dataTest,cuda)
+    trainA, trainX, trainT,cfTrainT,POTrain,cfPOTrain = dataTransform(dataTrain,cuda)
+    valA, valX, valT,cfValT,POVal,cfPOVal = dataTransform(dataVal,cuda)
+    testA, testX, testT,cfTestT,POTest,cfPOTest = dataTransform(dataTest,cuda)
 
     
-    # train_t1z1=dataTrain["train_t1z1"]
-    # train_t1z0=dataTrain["train_t1z0"]
-    # train_t0z0=dataTrain["train_t0z0"]
-    # train_t0z7=dataTrain["train_t0z7"]
-    # train_t0z2=dataTrain["train_t0z2"]
-    # val_t1z1=dataVal["val_t1z1"]
-    # val_t1z0=dataVal["val_t1z0"]
-    # val_t0z0=dataVal["val_t0z0"]
-    # val_t0z7=dataVal["val_t0z7"]
-    # val_t0z2=dataVal["val_t0z2"]
-    # test_t1z1=dataTest["test_t1z1"]
-    # test_t1z0=dataTest["test_t1z0"]
-    # test_t0z0=dataTest["test_t0z0"]
-    # test_t0z7=dataTest["test_t0z7"]
-    # test_t0z2=dataTest["test_t0z2"]
+    train_t1z1=dataTrain["train_t1z1"]
+    train_t1z0=dataTrain["train_t1z0"]
+    train_t0z0=dataTrain["train_t0z0"]
+    train_t0z7=dataTrain["train_t0z7"]
+    train_t0z2=dataTrain["train_t0z2"]
+    val_t1z1=dataVal["val_t1z1"]
+    val_t1z0=dataVal["val_t1z0"]
+    val_t0z0=dataVal["val_t0z0"]
+    val_t0z7=dataVal["val_t0z7"]
+    val_t0z2=dataVal["val_t0z2"]
+    test_t1z1=dataTest["test_t1z1"]
+    test_t1z0=dataTest["test_t1z0"]
+    test_t0z0=dataTest["test_t0z0"]
+    test_t0z7=dataTest["test_t0z7"]
+    test_t0z2=dataTest["test_t0z2"]
 
     return trainA, trainX, trainT,cfTrainT,POTrain,cfPOTrain,valA, valX, valT,cfValT, POVal,cfPOVal,testA, testX, testT,cfTestT,POTest,cfPOTest,train_t1z1,train_t1z0,train_t0z0,train_t0z1,train_t0z2,val_t1z1,val_t1z0,val_t0z0,val_t0z1,val_t0z2,test_t1z1,test_t1z0,test_t0z0,test_t0z1,test_t0z2
 
