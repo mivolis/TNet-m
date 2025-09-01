@@ -287,8 +287,9 @@ def load_data(args):
     test_t0z7=dataTest["test_t0z7"]
     test_t0z2=dataTest["test_t0z2"]
 
-    return trainA, trainX, trainT,cfTrainT,POTrain,cfPOTrain,valA, valX, valT,cfValT, POVal,cfPOVal,testA, testX, testT,cfTestT,POTest,cfPOTest,train_t1z1,train_t1z0,train_t0z0,train_t0z1,train_t0z2,val_t1z1,val_t1z0,val_t0z0,val_t0z1,val_t0z2,test_t1z1,test_t1z0,test_t0z0,test_t0z1,test_t0z2
 
+    return trainA, trainX, trainT,cfTrainT,POTrain,cfPOTrain,valA, valX, valT,cfValT, POVal,cfPOVal,testA, testX, testT,cfTestT,POTest,cfPOTest,train_t1z1,train_t1z0,train_t0z0,train_t0z7,train_t0z2,val_t1z1,val_t1z0,val_t0z0,val_t0z7,val_t0z2,test_t1z1,test_t1z0,test_t0z0,test_t0z7,test_t0z2
+	
 def load_data_no_flip(args):
     print("================================Dataset================================")
     print("Model:{}, Dataset:{}, expID:{}, alpha:{}, gamma:{}".format(args.model, args.dataset, args.expID,
