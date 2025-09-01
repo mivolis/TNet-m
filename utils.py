@@ -227,7 +227,7 @@ def load_data(args):
         flipRate = 0
     
     if dataset == "BC" or dataset == "BC_hete" or dataset == "BC_hete2":
-        file = "./kaggle/input/bc-dataset/BC/simulation/"+str(dataset)+"_fliprate_"+str(flipRate)+"_expID_"+str(expID)+".pkl"
+        file = "/kaggle/input/bc-dataset/BC/simulation/"+str(dataset)+"_fliprate_"+str(flipRate)+"_expID_"+str(expID)+".pkl"
     if dataset == "Flickr" or dataset == "Flickr_hete" or dataset == "Flickr_hete2":
         file = "./data/Flickr/simulation/"+str(dataset)+"_fliprate_"+str(flipRate)+"_expID_"+str(expID)+".pkl"
     if dataset == "Simulation":
